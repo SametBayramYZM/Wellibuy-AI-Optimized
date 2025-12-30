@@ -30,7 +30,7 @@ export default function PCBuilderPage() {
     'Counter-Strike 2'
   ]
 
-  async function handleBuild() {
+  async function handleBuild(): Promise<void> {
     setLoading(true)
     try {
       const request: PCBuilderRequest = {

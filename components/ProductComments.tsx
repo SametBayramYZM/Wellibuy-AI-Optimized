@@ -3,11 +3,31 @@
 import { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
 
-export default function ProductComments({ productId }) {
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+interface Comment {
+  _id: string;
+  userName: string;
+  title: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+interface ProductCommentsProps {
+  productId: string;
+}
+
+export default function ProductComments({ productId }: ProductCommentsProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [showForm, setShowForm] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     rating: 5,
     title: '',
@@ -17,12 +37,16 @@ export default function ProductComments({ productId }) {
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
-      setUser(JSON.parse(userData));
+      try {
+        setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error('User data parse error:', error);
+      }
     }
     fetchComments();
   }, [productId]);
 
-  const fetchComments = async () => {
+  const fetchComments = async (): Promise<void> => {
     try {
       const response = await fetch(
         `http://localhost:5001/api/comments/${productId}`
@@ -38,7 +62,7 @@ export default function ProductComments({ productId }) {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 

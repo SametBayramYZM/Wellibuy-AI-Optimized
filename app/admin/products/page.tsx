@@ -1,14 +1,45 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useState as UseStateHook } from 'react';
+
+interface Price {
+  siteName: string;
+  price: number;
+  url: string;
+  inStock: boolean;
+}
+
+interface Specification {
+  [key: string]: any;
+}
+
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  brand: string;
+  images: string[];
+  prices: Price[];
+  specifications: Specification[];
+}
+
+interface FormData {
+  name: string;
+  description: string;
+  category: string;
+  brand: string;
+  images: string[];
+  prices: Price[];
+  specifications: Specification[];
+}
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
     category: 'Elektronik',
@@ -22,7 +53,7 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (): Promise<void> => {
     try {
       const response = await fetch('http://localhost:5001/api/products?limit=100');
       if (response.ok) {
@@ -36,7 +67,7 @@ export default function ProductsPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
@@ -51,7 +82,7 @@ export default function ProductsPage() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         },
         body: JSON.stringify(formData)
       });
@@ -69,16 +100,16 @@ export default function ProductsPage() {
           prices: [{ siteName: 'Store', price: 0, url: '', inStock: true }],
           specifications: []
         });
-        fetchProducts();
+        await fetchProducts();
       } else {
         alert('Hata: ' + response.statusText);
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string): Promise<void> => {
     if (!confirm('Silmek istediğinizden emin misiniz?')) return;
 
     const token = localStorage.getItem('token');
@@ -86,20 +117,20 @@ export default function ProductsPage() {
       const response = await fetch(`http://localhost:5001/api/products/${id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         }
       });
 
       if (response.ok) {
         alert('Ürün silindi');
-        fetchProducts();
+        await fetchProducts();
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
-  const handleEdit = (product) => {
+  const handleEdit = (product: Product): void => {
     setFormData(product);
     setEditingId(product._id);
     setShowModal(true);

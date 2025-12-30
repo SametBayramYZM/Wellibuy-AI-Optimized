@@ -6,24 +6,36 @@ import { useRouter } from 'next/navigation'
 import { Search, Menu, X, Sparkles, ShoppingCart, User, LogOut } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
+
 export default function Header() {
   const router = useRouter()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [user, setUser] = useState(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [searchOpen, setSearchOpen] = useState<boolean>(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     const userData = localStorage.getItem('user')
     setIsLoggedIn(!!token)
     if (userData) {
-      setUser(JSON.parse(userData))
+      try {
+        setUser(JSON.parse(userData))
+      } catch (error) {
+        console.error('User data parse error:', error)
+      }
     }
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem('token')
     setIsLoggedIn(false)
     setUserMenuOpen(false)

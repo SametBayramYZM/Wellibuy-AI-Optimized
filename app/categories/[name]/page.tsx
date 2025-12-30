@@ -32,7 +32,7 @@ export default function CategoryPage() {
     loadProducts()
   }, [categoryName, page])
 
-  async function loadProducts() {
+  async function loadProducts(): Promise<void> {
     setLoading(true)
     try {
       const response = await getCategoryProducts(formattedCategory, page)

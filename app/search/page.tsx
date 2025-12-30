@@ -57,7 +57,7 @@ export default function SearchPage() {
     loadResults()
   }, [query, isAI])
 
-  async function loadResults() {
+  async function loadResults(): Promise<void> {
     setLoading(true)
     try {
       let criteria: any = { query }

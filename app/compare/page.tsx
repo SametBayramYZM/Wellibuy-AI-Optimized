@@ -5,14 +5,19 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
+interface ComparisonData {
+  products: any[];
+  [key: string]: any;
+}
+
 export default function ComparePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const productIds = searchParams.get('products')?.split(',') || [];
 
-  const [products, setProducts] = useState([]);
-  const [comparison, setComparison] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<any[]>([]);
+  const [comparison, setComparison] = useState<ComparisonData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (productIds.length < 2) {
@@ -24,7 +29,7 @@ export default function ComparePage() {
     fetchComparison();
   }, [productIds, router]);
 
-  const fetchComparison = async () => {
+  const fetchComparison = async (): Promise<void> => {
     try {
       const response = await fetch('http://localhost:5001/api/products/compare', {
         method: 'POST',
@@ -32,7 +37,7 @@ export default function ComparePage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          productIds: productIds.filter(id => id.trim())
+          productIds: productIds.filter((id: string) => id.trim())
         })
       });
 

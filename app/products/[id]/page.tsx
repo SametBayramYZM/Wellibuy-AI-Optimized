@@ -31,7 +31,7 @@ export default function ProductPage() {
     loadProduct()
   }, [id])
 
-  async function loadProduct() {
+  async function loadProduct(): Promise<void> {
     setLoading(true)
     try {
       const response = await getProduct(id)

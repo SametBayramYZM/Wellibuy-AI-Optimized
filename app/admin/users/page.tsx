@@ -2,20 +2,30 @@
 
 import { useEffect, useState } from 'react';
 
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5001/api/admin/users', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         }
       });
 
@@ -30,7 +40,7 @@ export default function UsersPage() {
     }
   };
 
-  const handleDelete = async (userId) => {
+  const handleDelete = async (userId: string): Promise<void> => {
     if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) return;
 
     const token = localStorage.getItem('token');
@@ -38,41 +48,41 @@ export default function UsersPage() {
       const response = await fetch(`http://localhost:5001/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         }
       });
 
       if (response.ok) {
         alert('Kullanıcı silindi');
-        fetchUsers();
+        await fetchUsers();
       } else {
         alert('Hata: ' + response.statusText);
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
-  const handleToggleActive = async (userId, isActive) => {
+  const handleToggleActive = async (userId: string, isActive: boolean): Promise<void> => {
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`http://localhost:5001/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         },
         body: JSON.stringify({ isActive: !isActive })
       });
 
       if (response.ok) {
         alert(isActive ? 'Kullanıcı deaktif edildi' : 'Kullanıcı aktifleştirildi');
-        fetchUsers();
+        await fetchUsers();
       } else {
         alert('Hata: ' + response.statusText);
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
