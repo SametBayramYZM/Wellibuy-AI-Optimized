@@ -10,6 +10,7 @@ interface Comment {
   rating: number;
   comment: string;
   createdAt: string;
+  userId: string;
 }
 
 interface User {
@@ -17,6 +18,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  role?: string;
 }
 
 interface ProductCommentsProps {
