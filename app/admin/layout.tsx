@@ -4,9 +4,20 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function AdminLayout({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
+
+interface AdminLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
