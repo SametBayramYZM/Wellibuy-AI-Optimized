@@ -2,20 +2,31 @@
 
 import { useEffect, useState } from 'react';
 
+interface Stats {
+  users: {
+    total: number;
+    admin: number;
+    active: number;
+  };
+  products: {
+    total: number;
+  };
+}
+
 export default function AdminDashboard() {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchStats();
   }, []);
 
-  const fetchStats = async () => {
+  const fetchStats = async (): Promise<void> => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5001/api/admin/stats', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token || ''}`
         }
       });
 
