@@ -249,7 +249,7 @@ export default function SearchPage() {
                 <div className={viewMode === 'grid' 
                   ? 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3'
                   : 'space-y-4'
-                }>}
+                }>
                   {results.products.map((product) => (
                     <ProductCard key={product._id} product={product} viewMode={viewMode} />
                   ))}
