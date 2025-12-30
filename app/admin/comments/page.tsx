@@ -11,21 +11,23 @@ interface Comment {
   createdAt: string;
 }
 
+interface ApiResponse {
+  data?: Comment[];
+}
+
 export default function CommentsPage() {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchAllComments();
   }, []);
 
-  const fetchAllComments = async () => {
+  const fetchAllComments = async (): Promise<void> => {
     try {
-      // Tüm ürünlerin yorumlarını getirmek için API'ye istek atıyoruz
-      // Bu endpoint tüm yorumları döndürmelidir
       const response = await fetch('http://localhost:5001/api/comments');
       if (response.ok) {
-        const data = await response.json();
+        const data: ApiResponse = await response.json();
         setComments(data.data || []);
       }
     } catch (error) {
@@ -35,7 +37,7 @@ export default function CommentsPage() {
     }
   };
 
-  const handleDeleteComment = async (commentId: string) => {
+  const handleDeleteComment = async (commentId: string): Promise<void> => {
     if (!confirm('Yorum silinecek, devam etmek istediğinizden emin misiniz?')) return;
 
     const token = localStorage.getItem('token');
@@ -45,14 +47,14 @@ export default function CommentsPage() {
         {
           method: 'DELETE',
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token || ''}`
           }
         }
       );
 
       if (response.ok) {
         alert('Yorum silindi');
-        fetchAllComments();
+        await fetchAllComments();
       } else {
         alert('Hata: ' + response.statusText);
       }
