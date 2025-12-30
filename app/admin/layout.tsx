@@ -29,17 +29,24 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       return;
     }
 
-    const parsedUser = JSON.parse(userData);
-    if (parsedUser.role !== 'admin') {
-      router.push('/');
+    try {
+      const parsedUser: User = JSON.parse(userData);
+      if (parsedUser.role !== 'admin') {
+        router.push('/');
+        return;
+      }
+
+      setUser(parsedUser);
+    } catch (error) {
+      console.error('User data parse error:', error);
+      router.push('/auth/login');
       return;
     }
 
-    setUser(parsedUser);
     setLoading(false);
   }, [router]);
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     router.push('/auth/login');
