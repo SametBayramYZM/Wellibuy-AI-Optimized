@@ -48,7 +48,7 @@ export default function CommentsPage() {
         alert('Hata: ' + response.statusText);
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
