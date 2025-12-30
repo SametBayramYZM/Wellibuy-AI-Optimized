@@ -2,8 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
+interface Comment {
+  _id: string;
+  userName: string;
+  title: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export default function CommentsPage() {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
