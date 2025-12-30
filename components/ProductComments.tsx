@@ -88,17 +88,17 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
         alert('Yorumunuz başarıyla eklendi');
         setFormData({ rating: 5, title: '', comment: '' });
         setShowForm(false);
-        fetchComments();
+        await fetchComments();
       } else {
         const data = await response.json();
         alert('Hata: ' + (data.error || response.statusText));
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (commentId: string): Promise<void> => {
     if (!confirm('Yorum silinecek, devam etmek istediğinizden emin misiniz?')) return;
 
     const token = localStorage.getItem('token');
@@ -108,17 +108,17 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
         {
           method: 'DELETE',
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token || ''}`
           }
         }
       );
 
       if (response.ok) {
         alert('Yorum silindi');
-        fetchComments();
+        await fetchComments();
       }
     } catch (error) {
-      alert('Hata: ' + error.message);
+      alert('Hata: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'));
     }
   };
 
