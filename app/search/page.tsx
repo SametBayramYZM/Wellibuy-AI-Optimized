@@ -18,6 +18,9 @@ import { searchProducts, smartSearch } from '@/lib/api'
 import type { Product, SearchResults as SearchResultsType } from '@/types'
 import { Filter, Sparkles, ChevronDown, Grid, List, Send, X, Loader2 } from 'lucide-react'
 
+// Force dynamic rendering for useSearchParams
+export const dynamic = 'force-dynamic';
+
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string

@@ -5,6 +5,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
+// Force dynamic rendering for useSearchParams
+export const dynamic = 'force-dynamic';
+
 interface Specification {
   name: string;
   values: any[];
