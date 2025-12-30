@@ -26,7 +26,7 @@ export default function CommentsPage() {
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
+  const handleDeleteComment = async (commentId: string) => {
     if (!confirm('Yorum silinecek, devam etmek istediğinizden emin misiniz?')) return;
 
     const token = localStorage.getItem('token');
