@@ -22,6 +22,7 @@ interface Product {
   images: string[];
   prices: Price[];
   specifications: Specification[];
+  rating?: number;
 }
 
 interface FormData {
