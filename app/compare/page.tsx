@@ -5,8 +5,14 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
+interface Specification {
+  name: string;
+  values: any[];
+}
+
 interface ComparisonData {
   products: any[];
+  specifications: Specification[];
   [key: string]: any;
 }
 
@@ -201,7 +207,7 @@ export default function ComparePage() {
                   </tr>
 
                   {/* Specifications */}
-                  {comparison.specifications.map((spec, idx) => (
+                  {comparison.specifications.map((spec: Specification, idx: number) => (
                     <tr
                       key={idx}
                       className={idx % 2 === 0 ? 'bg-gray-50' : ''}
@@ -209,7 +215,7 @@ export default function ComparePage() {
                       <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                         {spec.name}
                       </td>
-                      {spec.values.map((value, i) => (
+                      {spec.values.map((value: any, i: number) => (
                         <td
                           key={i}
                           className={`px-6 py-4 text-sm text-gray-600 ${
