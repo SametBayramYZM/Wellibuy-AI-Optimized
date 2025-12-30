@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -19,7 +19,7 @@ interface ComparisonData {
   [key: string]: any;
 }
 
-export default function ComparePage() {
+function ComparePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const productIds = searchParams.get('products')?.split(',') || [];
@@ -245,5 +245,23 @@ export default function ComparePage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Header />
+        <main className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 py-12 px-4">
+          <div className="text-center">
+            <p className="text-xl text-gray-600">Yükleniyor...</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    }>
+      <ComparePageContent />
+    </Suspense>
   );
 }

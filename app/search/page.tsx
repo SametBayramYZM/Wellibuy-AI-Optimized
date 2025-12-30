@@ -9,7 +9,7 @@
 
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
@@ -27,7 +27,7 @@ interface ChatMessage {
   timestamp: Date
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
   const isAI = searchParams.get('ai') === 'true'
@@ -399,4 +399,22 @@ function ProductCard({ product, viewMode }: { product: Product, viewMode: 'grid'
       </div>
     </Link>
   )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Header />
+        <main className="flex-1 bg-gradient-to-br from-primary-50 to-blue-50">
+          <div className="text-center py-12">
+            <p className="text-xl text-gray-600">Yükleniyor...</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    }>
+      <SearchPageContent />
+    </Suspense>
+  );
 }
