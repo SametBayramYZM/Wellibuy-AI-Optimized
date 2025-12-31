@@ -4,13 +4,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "OPENAI_API_KEY": "@openai_api_key",
-    "FRONTEND_URL": "@frontend_url",
-    "BACKEND_URL": "@backend_url"
-  },
   "functions": {
     "app/api/**": {
       "memory": 1024,
