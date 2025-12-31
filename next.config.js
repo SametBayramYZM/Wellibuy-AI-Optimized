@@ -5,16 +5,39 @@ const nextConfig = {
     domains: ['localhost', 'wellibuy.com'],
     formats: ['image/webp', 'image/avif'],
   },
-  // Mobil optimizasyon
-  // experimental: {
-  //   optimizeCss: true,
-  // },
+  // Vercel Deployment Optimization
+  swcMinify: true,
+  compress: true,
   // API yönlendirmeleri
   async rewrites() {
+    return {
+      fallback: [
+        {
+          source: '/api/:path*',
+          destination: `${process.env.BACKEND_URL || 'http://localhost:5001'}/api/:path*`,
+        },
+      ],
+    };
+  },
+  // Headers for security
+  async headers() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://localhost:5000/api/:path*',
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+        ],
       },
     ];
   },
